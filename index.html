@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen Custom — Bike Accessories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --white: #f0f0f0;
+  --g100: #111111;
+  --g200: #1e1e1e;
+  --g300: #2e2e2e;
+  --g400: #555555;
+  --g500: #888888;
+  --trans: cubic-bezier(0.4,0,0.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Space Grotesk',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--g300);border-radius:2px}
+
+/* CANVAS */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* CURSOR GLOW */
+#glow{position:fixed;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.025) 0%,transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.4rem 2.5rem;display:flex;align-items:center;justify-content:space-between;transition:background .3s,backdrop-filter .3s}
+nav.scrolled{background:rgba(8,8,8,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--g200)}
+.logo{font-family:'Space Mono',monospace;font-size:1.25rem;letter-spacing:.08em;color:var(--white);text-decoration:none}
+.logo span{color:var(--g400)}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--g500);text-decoration:none;font-size:.875rem;letter-spacing:.04em;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.cart-btn{display:flex;align-items:center;gap:.5rem;background:transparent;border:1px solid var(--g300);color:var(--white);padding:.55rem 1.1rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.875rem;cursor:pointer;transition:all .2s}
+.cart-btn:hover{background:var(--white);color:var(--black);border-color:var(--white)}
+.cart-count{background:var(--white);color:var(--black);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700}
+.cart-btn:hover .cart-count{background:var(--black);color:var(--white)}
+.cart-count.bump{animation:bump .3s ease}
+@keyframes bump{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9rem 2rem 5rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--g100);border:1px solid var(--g200);border-radius:100px;padding:.35rem 1rem;font-size:.75rem;letter-spacing:.12em;color:var(--g500);margin-bottom:2rem;animation:fadeUp .8s var(--trans) both}
+.pulse-dot{width:6px;height:6px;background:var(--white);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-h1{font-size:clamp(3.5rem,12vw,9rem);font-weight:700;line-height:.9;letter-spacing:-.03em;animation:fadeUp .8s var(--trans) .1s both}
+.hero-h1 .outline{color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.2)}
+.hero-sub{margin-top:2rem;font-size:clamp(.95rem,1.8vw,1.15rem);color:var(--g500);max-width:480px;line-height:1.7;animation:fadeUp .8s var(--trans) .2s both}
+.hero-cta{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;animation:fadeUp .8s var(--trans) .3s both}
+.btn-p{background:var(--white);color:var(--black);border:none;padding:.9rem 2.2rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;text-decoration:none;transition:all .2s;display:inline-block}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,255,255,.18)}
+.btn-s{background:transparent;color:var(--white);border:1px solid var(--g300);padding:.9rem 2.2rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s;display:inline-block}
+.btn-s:hover{border-color:var(--white);background:rgba(255,255,255,.05)}
+.scroll-hint{position:absolute;bottom:2.5rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--g400);font-size:.7rem;letter-spacing:.15em;animation:fadeUp 1s var(--trans) .5s both}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--g400),transparent);animation:scroll-anim 2s ease-in-out infinite}
+@keyframes scroll-anim{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.4;transform:scaleY(.5)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* PRODUCTS */
+.products{position:relative;z-index:1;padding:7rem 2.5rem;max-width:1380px;margin:0 auto}
+.section-label{font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--g500);text-transform:uppercase;margin-bottom:.8rem}
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:4.5rem}
+.ph-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;letter-spacing:-.02em;line-height:1}
+.ph-title span{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.2)}
+.ph-count{font-family:'Space Mono',monospace;color:var(--g400);font-size:.8rem}
+
+/* PRODUCT CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:1.5rem}
+.card{position:relative;background:var(--g100);border:1px solid var(--g200);border-radius:22px;overflow:hidden;transform-style:preserve-3d;transition:box-shadow .3s}
+.card:hover{box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.06) 0%,transparent 55%);pointer-events:none;z-index:1;opacity:0;transition:opacity .3s}
+.card:hover::after{opacity:1}
+.img-wrap{position:relative;height:420px;overflow:hidden;background:var(--g200)}
+.img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--trans)}
+.card:hover .img-wrap img{transform:scale(1.06)}
+.tag{position:absolute;top:1.2rem;left:1.2rem;background:var(--black);border:1px solid var(--g300);padding:.3rem .75rem;border-radius:100px;font-size:.72rem;letter-spacing:.08em;color:var(--g500);z-index:2}
+.dots{position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.4rem;z-index:2}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer;transition:all .2s}
+.dot.on{background:var(--white);width:18px;border-radius:3px}
+.card-body{padding:1.8rem;position:relative;z-index:2}
+.card-num{font-family:'Space Mono',monospace;font-size:.68rem;color:var(--g400);letter-spacing:.15em;margin-bottom:.6rem}
+.card-name{font-size:1.55rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.7rem;line-height:1.1}
+.card-desc{color:var(--g500);font-size:.9rem;line-height:1.65;margin-bottom:1.4rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.8rem}
+.chip{background:var(--g200);border:1px solid var(--g300);border-radius:100px;padding:.28rem .75rem;font-size:.75rem;color:var(--g500)}
+.card-foot{display:flex;align-items:center;justify-content:space-between}
+.price{font-size:1.9rem;font-weight:700;letter-spacing:-.03em}
+.price small{font-size:.9rem;color:var(--g500);font-weight:400}
+.atc{display:flex;align-items:center;gap:.4rem;background:var(--white);color:var(--black);border:none;padding:.8rem 1.6rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.atc:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,.18)}
+.atc:active{transform:scale(.97)}
+
+/* DIVIDER */
+.divider{position:relative;z-index:1;height:1px;background:linear-gradient(to right,transparent,var(--g300),transparent);margin:0 2.5rem}
+
+/* ABOUT */
+.about{position:relative;z-index:1;padding:7rem 2.5rem;max-width:1380px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.about-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-bottom:1.8rem}
+.about-text{color:var(--g500);line-height:1.8;font-size:1rem;margin-bottom:1.2rem}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
+.stat{border-left:2px solid var(--g300);padding-left:1.2rem}
+.stat-n{font-size:2.2rem;font-weight:700;letter-spacing:-.04em}
+.stat-l{font-size:.8rem;color:var(--g500);margin-top:.2rem}
+.about-img{border-radius:18px;border:1px solid var(--g200);width:100%;display:block;position:relative}
+.about-img-wrap{position:relative}
+.about-img-wrap::before{content:'';position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.05),transparent);z-index:1;pointer-events:none}
+
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem 2.5rem 2rem;max-width:1380px;margin:0 auto}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4rem;gap:2rem}
+.foot-brand .logo{display:block;margin-bottom:1rem}
+.foot-brand p{color:var(--g500);font-size:.875rem;max-width:250px;line-height:1.65}
+.foot-col h4{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--g500);margin-bottom:1rem}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.foot-col a{color:var(--g400);text-decoration:none;font-size:.875rem;transition:color .2s}
+.foot-col a:hover{color:var(--white)}
+.foot-btm{display:flex;justify-content:space-between;align-items:center;color:var(--g400);font-size:.78rem;border-top:1px solid var(--g200);padding-top:1.8rem}
+
+/* CART */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:9000;opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-panel{position:fixed;top:0;right:0;width:min(430px,100vw);height:100vh;background:var(--g100);border-left:1px solid var(--g200);z-index:9001;transform:translateX(100%);transition:transform .4s var(--trans);display:flex;flex-direction:column}
+.cart-panel.open{transform:translateX(0)}
+.cart-hd{padding:1.8rem 2rem;border-bottom:1px solid var(--g200);display:flex;align-items:center;justify-content:space-between}
+.cart-hd h2{font-size:1.1rem;font-weight:700}
+.x-btn{background:var(--g200);border:none;color:var(--white);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.x-btn:hover{background:var(--g300)}
+.cart-body{flex:1;overflow-y:auto;padding:1.5rem}
+.c-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--g500);gap:.8rem;text-align:center}
+.c-empty-ico{font-size:2.5rem;opacity:.25}
+.c-item{display:flex;gap:1rem;padding:1rem;background:var(--g200);border-radius:12px;margin-bottom:.8rem;animation:slideIn .25s var(--trans)}
+@keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+.c-item img{width:68px;height:68px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--g300)}
+.c-item-name{font-size:.9rem;font-weight:600;margin-bottom:.25rem}
+.c-item-price{font-size:.82rem;color:var(--g500)}
+.c-controls{display:flex;align-items:center;gap:.6rem;margin-top:.65rem}
+.qty-btn{background:var(--g300);border:none;color:var(--white);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:background .2s;line-height:1}
+.qty-btn:hover{background:var(--g400)}
+.qty{font-size:.85rem;min-width:18px;text-align:center}
+.rm-btn{margin-left:auto;background:none;border:none;color:var(--g400);cursor:pointer;font-size:.75rem;transition:color .2s}
+.rm-btn:hover{color:var(--white)}
+.cart-ft{padding:1.5rem 2rem;border-top:1px solid var(--g200)}
+.cart-sub{display:flex;justify-content:space-between;margin-bottom:1.3rem}
+.cart-sub .lbl{color:var(--g500)}
+.cart-sub .amt{font-weight:700;font-size:1.25rem}
+.ck-btn{width:100%;background:var(--white);color:var(--black);border:none;padding:.95rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+.ck-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,255,255,.18)}
+.ck-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:10000;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--g100);border:1px solid var(--g200);border-radius:22px;width:min(550px,100%);max-height:90vh;overflow-y:auto;padding:2.5rem;transform:translateY(16px);transition:transform .35s var(--trans)}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.modal-hd h2{font-size:1.3rem;font-weight:700;letter-spacing:-.01em}
+.order-box{background:var(--g200);border-radius:14px;padding:1.4rem;margin-bottom:1.8rem}
+.order-box h3{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.18em;color:var(--g500);text-transform:uppercase;margin-bottom:.9rem}
+.o-line{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:.5rem;color:var(--g500)}
+.o-line.total{color:var(--white);font-weight:700;font-size:1rem;border-top:1px solid var(--g300);padding-top:.75rem;margin-top:.3rem}
+.fsec{margin-bottom:1.8rem}
+.fsec-title{font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:.18em;color:var(--g500);text-transform:uppercase;margin-bottom:1.1rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.ff{margin-bottom:.8rem}
+.ff label{display:block;font-size:.78rem;color:var(--g500);margin-bottom:.4rem;letter-spacing:.04em}
+.ff input{width:100%;background:var(--g200);border:1px solid var(--g300);color:var(--white);padding:.8rem .9rem;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:.9rem;transition:border-color .2s;outline:none}
+.ff input:focus{border-color:var(--white)}
+.ff input::placeholder{color:var(--g400)}
+.ff input.err{border-color:#ff4444}
+.card-wrap{position:relative}
+.card-ico{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);font-size:.65rem;color:var(--g400);opacity:.5;letter-spacing:.05em}
+.secure{display:flex;align-items:center;gap:.4rem;color:var(--g500);font-size:.75rem;margin-bottom:1.4rem}
+.pay-btn{width:100%;background:var(--white);color:var(--black);border:none;padding:1rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,255,255,.18)}
+.pay-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* SUCCESS */
+.success{display:none;flex-direction:column;align-items:center;text-align:center;padding:2.5rem 1rem}
+.success.show{display:flex}
+.s-ico{width:76px;height:76px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.8rem;animation:pop .5s var(--trans)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.s-ico svg{width:36px;height:36px;color:var(--black)}
+.success h2{font-size:1.7rem;font-weight:700;margin-bottom:.8rem}
+.success p{color:var(--g500);line-height:1.65;max-width:320px}
+
+/* SCROLL ANIM */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr;gap:3rem}
+  .ph{flex-direction:column;align-items:flex-start;gap:1rem}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column}
+  .hero-cta{flex-direction:column;width:100%;max-width:260px}
+  .btn-p,.btn-s{width:100%;text-align:center}
+  .frow{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div id="glow"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">LUMEN<span>CUSTOM</span></a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="mailto:info@lumencustom.com">Contact</a></li>
+  </ul>
+  <button class="cart-btn" onclick="openCart()">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+    Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="pulse-dot"></span>LUMEN CUSTOM — BIKE ACCESSORIES</div>
+  <h1 class="hero-h1">
+    <div>RIDE</div>
+    <div class="outline">DIFFERENT</div>
+  </h1>
+  <p class="hero-sub">Premium custom accessories engineered for performance bikes. Built to illuminate the trail and turn heads.</p>
+  <div class="hero-cta">
+    <a href="#products" class="btn-p">Shop Now</a>
+    <a href="#about" class="btn-s">Our Story</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    SCROLL
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="ph reveal">
+    <div>
+      <div class="section-label">// Our Products</div>
+      <h2 class="ph-title">BUILT FOR <span>YOUR</span> RIDE</h2>
+    </div>
+    <span class="ph-count">02 Products</span>
+  </div>
+
+  <div class="grid">
+
+    <!-- Glossy Plate -->
+    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)">
+      <div class="img-wrap">
+        <img src="./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg" id="plateImg" alt="Glossy Custom Plate">
+        <span class="tag">IN STOCK</span>
+        <div class="dots" id="plateDots">
+          <div class="dot on" onclick="swapImg(0,'plateImg','./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg','plateDots')"></div>
+          <div class="dot" onclick="swapImg(1,'plateImg','./0E64AF0E-FA25-42C7-B50C-88569D1DE576.jpeg','plateDots')"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">01 / 02</div>
+        <h3 class="card-name">Glossy Custom Plate</h3>
+        <p class="card-desc">Precision-molded high-gloss front plate for electric dirt bikes. Mirror-finish black coat with custom fitment that commands attention on and off the trail.</p>
+        <div class="chips">
+          <span class="chip">High-Gloss Finish</span>
+          <span class="chip">Custom Fit</span>
+          <span class="chip">UV Resistant</span>
+          <span class="chip">Lightweight ABS</span>
+        </div>
+        <div class="card-foot">
+          <div class="price">$45<small>.00</small></div>
+          <button class="atc" onclick="addToCart('plate')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baja Light + Horn Kit -->
+    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)">
+      <div class="img-wrap">
+        <img src="./0.jpg" alt="Baja Light + Horn Kit">
+        <span class="tag" style="background:var(--white);color:var(--black);border-color:var(--white)">BEST SELLER</span>
+      </div>
+      <div class="card-body">
+        <div class="card-num">02 / 02</div>
+        <h3 class="card-name">Baja Light + Horn Kit</h3>
+        <p class="card-desc">Complete plug-and-play kit with dual-LED Baja light, electric horn, battery pack, and handlebar-mounted dual switch. Two switch styles available.</p>
+        <div class="chips">
+          <span class="chip">Dual LED</span>
+          <span class="chip">Electric Horn</span>
+          <span class="chip">Plug &amp; Play</span>
+          <span class="chip">2 Switch Options</span>
+          <span class="chip">Battery Included</span>
+        </div>
+        <div class="card-foot">
+          <div class="price">$50<small>.00</small></div>
+          <button class="atc" onclick="addToCart('kit')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="reveal">
+    <div class="section-label">// About Lumen Custom</div>
+    <h2 class="about-title">Engineered for the Thrill</h2>
+    <p class="about-text">Lumen Custom was built by riders, for riders. Every accessory is designed to enhance your electric bike's performance, safety, and style on any terrain.</p>
+    <p class="about-text">From high-gloss custom body panels to complete lighting and horn kits — we create purpose-built upgrades that make your ride uniquely yours.</p>
+    <div class="stats">
+      <div class="stat reveal"><div class="stat-n">100%</div><div class="stat-l">Custom Made</div></div>
+      <div class="stat reveal"><div class="stat-n">2</div><div class="stat-l">Premium Products</div></div>
+      <div class="stat reveal"><div class="stat-n">$45</div><div class="stat-l">Starting Price</div></div>
+      <div class="stat reveal"><div class="stat-n">∞</div><div class="stat-l">Style Points</div></div>
+    </div>
+  </div>
+  <div class="about-img-wrap reveal">
+    <img class="about-img" src="./0E64AF0E-FA25-42C7-B50C-88569D1DE576.jpeg" alt="Electric Dirt Bike">
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <a href="#" class="logo">LUMEN<span>CUSTOM</span></a>
+      <p>Premium bike accessories for riders who demand more from their machines.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Products</h4>
+      <ul>
+        <li><a href="#products">Glossy Custom Plate</a></li>
+        <li><a href="#products">Baja Light + Horn Kit</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="mailto:info@lumencustom.com">Contact</a></li>
+        <li><a href="#">Returns &amp; Shipping</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-btm">
+    <span>© 2024 Lumen Custom. All rights reserved.</span>
+    <span>Made with precision.</span>
+  </div>
+</footer>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-hd">
+    <h2>Your Cart</h2>
+    <button class="x-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody"></div>
+  <div class="cart-ft">
+    <div class="cart-sub">
+      <span class="lbl">Subtotal</span>
+      <span class="amt" id="cartTotal">$0.00</span>
+    </div>
+    <button class="ck-btn" id="ckBtn" onclick="openCheckout()" disabled>Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-bg" id="modalBg" onclick="modalBgClick(event)">
+  <div class="modal" id="modal">
+
+    <div id="formView">
+      <div class="modal-hd">
+        <h2>Order Summary</h2>
+        <button class="x-btn" onclick="closeCheckout()">✕</button>
+      </div>
+
+      <div class="order-box">
+        <h3>Your Items</h3>
+        <div id="orderLines"></div>
+        <div class="o-line total"><span>Total</span><span id="orderTotal">$0.00</span></div>
+      </div>
+
+      <p style="color:var(--g500);font-size:.85rem;line-height:1.6;margin-bottom:1.5rem">You'll enter your shipping and payment details securely on the next page powered by Stripe.</p>
+
+      <div class="secure" style="margin-bottom:1.5rem">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Secured by Stripe · 256-bit SSL
+      </div>
+
+      <button class="pay-btn" id="payBtn" onclick="stripeCheckout()">
+        <span id="payBtnInner">Pay <span id="payAmt">$0.00</span> with Stripe</span>
+      </button>
+
+      <div id="stripeErr" style="display:none;color:#ff5555;font-size:.82rem;text-align:center;margin-top:1rem"></div>
+    </div>
+
+    <div class="success" id="successView">
+      <div class="s-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Order Confirmed!</h2>
+      <p>Thank you for your purchase. A confirmation email is on its way with your order details.</p>
+      <button class="btn-p" style="margin-top:2rem" onclick="closeCheckout();clearCart()">Continue Shopping</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── THREE.JS BACKGROUND ── */
+(function(){
+  const canvas = document.getElementById('bg');
+  const scene  = new THREE.Scene();
+  const cam    = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+  cam.position.z = 22;
+
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  /* particles */
+  const N = 900, pos = new Float32Array(N*3);
+  for(let i=0;i<N*3;i++) pos[i] = (Math.random()-.5)*90;
+  const ptGeo = new THREE.BufferGeometry();
+  ptGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  const pts = new THREE.Points(ptGeo, new THREE.PointsMaterial({color:0xffffff,size:.07,transparent:true,opacity:.35}));
+  scene.add(pts);
+
+  /* wire sphere */
+  const sph = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(9,2),
+    new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,transparent:true,opacity:.04})
+  );
+  sph.position.set(14,-4,0); scene.add(sph);
+
+  /* torus */
+  const tor = new THREE.Mesh(
+    new THREE.TorusGeometry(5.5,.4,8,36),
+    new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,transparent:true,opacity:.05})
+  );
+  tor.position.set(-13,5,0); scene.add(tor);
+
+  let mx=0, my=0;
+  document.addEventListener('mousemove', e=>{
+    mx = (e.clientX/innerWidth-.5)*2;
+    my = (e.clientY/innerHeight-.5)*2;
+  });
+
+  (function loop(){
+    requestAnimationFrame(loop);
+    const t = Date.now()*.001;
+    pts.rotation.y = t*.025 + mx*.04;
+    pts.rotation.x = t*.01  + my*.025;
+    sph.rotation.x = t*.09; sph.rotation.y = t*.13;
+    tor.rotation.x = t*.11; tor.rotation.z = t*.07;
+    cam.position.x += (mx*1.2 - cam.position.x)*.018;
+    cam.position.y += (-my*1.2 - cam.position.y)*.018;
+    cam.lookAt(scene.position);
+    renderer.render(scene, cam);
+  })();
+
+  window.addEventListener('resize', ()=>{
+    cam.aspect = innerWidth/innerHeight;
+    cam.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+})();
+
+/* ── CURSOR GLOW ── */
+const glow = document.getElementById('glow');
+document.addEventListener('mousemove', e=>{
+  glow.style.left = e.clientX+'px';
+  glow.style.top  = e.clientY+'px';
+});
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll', ()=>{
+  document.getElementById('nav').classList.toggle('scrolled', scrollY>50);
+});
+
+/* ── REVEAL ON SCROLL ── */
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* ── 3D CARD TILT ── */
+function tilt(e, card){
+  const r  = card.getBoundingClientRect();
+  const x  = e.clientX - r.left, y = e.clientY - r.top;
+  const rx = (y - r.height/2) / (r.height/2) * -7;
+  const ry = (x - r.width/2)  / (r.width/2)  *  7;
+  card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(6px)`;
+  card.style.setProperty('--mx', (x/r.width*100)+'%');
+  card.style.setProperty('--my', (y/r.height*100)+'%');
+}
+function untilt(card){
+  card.style.transform = 'perspective(900px) rotateX(0) rotateY(0) translateZ(0)';
+}
+
+/* ── IMAGE GALLERY ── */
+function swapImg(idx, imgId, src, dotsId){
+  const img  = document.getElementById(imgId);
+  const dots = document.getElementById(dotsId);
+  img.style.transition = 'opacity .2s';
+  img.style.opacity = '0';
+  setTimeout(()=>{ img.src=src; img.style.opacity='1'; },200);
+  [...dots.children].forEach((d,i)=>d.classList.toggle('on', i===idx));
+}
+
+/* ── CART STATE ── */
+const PRODUCTS = {
+  plate:{ id:'plate', name:'Glossy Custom Plate',   price:45, img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg' },
+  kit:  { id:'kit',  name:'Baja Light + Horn Kit',  price:50, img:'./0.jpg' }
+};
+let cart = {};
+
+function addToCart(id){
+  cart[id] ? cart[id].qty++ : (cart[id] = {...PRODUCTS[id], qty:1});
+  renderCart();
+  bump();
+  openCart();
+}
+
+function removeItem(id){ delete cart[id]; renderCart(); }
+
+function changeQty(id, d){
+  if(!cart[id]) return;
+  cart[id].qty += d;
+  if(cart[id].qty <= 0) removeItem(id);
+  else renderCart();
+}
+
+function total(){ return Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0); }
+function count(){ return Object.values(cart).reduce((s,i)=>s+i.qty,0); }
+
+function renderCart(){
+  const items = Object.values(cart);
+  const n = count(), t = total();
+  document.getElementById('cartCount').textContent = n;
+  document.getElementById('cartTotal').textContent = '$'+t.toFixed(2);
+  document.getElementById('ckBtn').disabled = n===0;
+
+  const body = document.getElementById('cartBody');
+  if(!items.length){
+    body.innerHTML = `<div class="c-empty"><div class="c-empty-ico">◎</div><p>Your cart is empty</p><small>Add a product to get started</small></div>`;
+    return;
+  }
+  body.innerHTML = items.map(i=>`
+    <div class="c-item">
+      <img src="${i.img}" alt="${i.name}">
+      <div style="flex:1">
+        <div class="c-item-name">${i.name}</div>
+        <div class="c-item-price">$${i.price}.00 each</div>
+        <div class="c-controls">
+          <button class="qty-btn" onclick="changeQty('${i.id}',-1)">−</button>
+          <span class="qty">${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${i.id}',1)">+</button>
+          <button class="rm-btn" onclick="removeItem('${i.id}')">Remove</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function bump(){
+  const el = document.getElementById('cartCount');
+  el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+}
+
+/* ── CART OPEN / CLOSE ── */
+function openCart(){
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeCart(){
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── CHECKOUT ── */
+function openCheckout(){
+  closeCart();
+  const items = Object.values(cart), t = total();
+  document.getElementById('orderLines').innerHTML = items.map(i=>`
+    <div class="o-line"><span>${i.name} × ${i.qty}</span><span>$${(i.price*i.qty).toFixed(2)}</span></div>
+  `).join('');
+  document.getElementById('orderTotal').textContent = '$'+t.toFixed(2);
+  document.getElementById('payAmt').textContent     = '$'+t.toFixed(2);
+  document.getElementById('formView').style.display = '';
+  document.getElementById('successView').classList.remove('show');
+  document.getElementById('payBtn').disabled = false;
+  document.getElementById('stripeErr').style.display = 'none';
+  document.getElementById('payBtnInner').innerHTML = 'Pay $'+t.toFixed(2)+' with Stripe';
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheckout(){
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow='';
+}
+function modalBgClick(e){ if(e.target===document.getElementById('modalBg')) closeCheckout(); }
+
+/* ── STRIPE CHECKOUT ── */
+async function stripeCheckout(){
+  const btn = document.getElementById('payBtn');
+  const errEl = document.getElementById('stripeErr');
+  errEl.style.display = 'none';
+  btn.disabled = true;
+
+  if(!document.getElementById('_spin')){
+    const s=document.createElement('style');
+    s.id='_spin';
+    s.textContent='@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+    document.head.appendChild(s);
+  }
+
+  document.getElementById('payBtnInner').innerHTML = `
+    <span style="display:inline-flex;align-items:center;gap:.5rem">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>
+      Redirecting to Stripe…
+    </span>`;
+
+  const items = Object.values(cart).map(i=>({ name:i.name, price:i.price, qty:i.qty }));
+
+  try {
+    const res  = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ items })
+    });
+    const data = await res.json();
+    if(data.url){
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Checkout failed');
+    }
+  } catch(err){
+    btn.disabled = false;
+    document.getElementById('payBtnInner').innerHTML = 'Pay $'+total().toFixed(2)+' with Stripe';
+    errEl.textContent = 'Could not connect to payment server. Make sure the server is running.';
+    errEl.style.display = 'block';
+  }
+}
+
+function clearCart(){
+  cart={};
+  renderCart();
+}
+
+/* ── INIT ── */
+renderCart();
+</script>
+</body>
+</html>

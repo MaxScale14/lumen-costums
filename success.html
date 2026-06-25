@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order Confirmed — Lumen Custom</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Space Grotesk',sans-serif;background:#080808;color:#f0f0f0;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+  .wrap{max-width:460px}
+  .logo{font-family:'Space Mono',monospace;font-size:1rem;letter-spacing:.08em;color:#555;margin-bottom:3rem;display:block}
+  .logo span{color:#333}
+  .ico{width:80px;height:80px;background:#f0f0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;animation:pop .5s cubic-bezier(.4,0,.2,1)}
+  @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+  .ico svg{width:38px;height:38px;color:#080808}
+  h1{font-size:2.2rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.9rem}
+  p{color:#777;line-height:1.7;font-size:.95rem;margin-bottom:.5rem}
+  .divider{width:40px;height:1px;background:#2e2e2e;margin:1.8rem auto}
+  a{display:inline-block;background:#f0f0f0;color:#080808;padding:.9rem 2.2rem;border-radius:100px;text-decoration:none;font-weight:700;font-size:.9rem;margin-top:1.5rem;transition:all .2s}
+  a:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,255,255,.15)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="/" class="logo">LUMEN<span>CUSTOM</span></a>
+  <div class="ico">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+  <h1>Order Confirmed!</h1>
+  <p>Your payment was successful.</p>
+  <p>Check your email for a receipt and shipping details.</p>
+  <div class="divider"></div>
+  <p style="color:#555;font-size:.8rem">Questions? Email us at <a href="mailto:info@lumencustom.com" style="background:none;color:#888;padding:0;margin:0;font-weight:400;font-size:inherit;display:inline;box-shadow:none;transform:none">info@lumencustom.com</a></p>
+  <br>
+  <a href="/">← Back to Shop</a>
+</div>
+</body>
+</html>

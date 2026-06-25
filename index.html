@@ -93,9 +93,64 @@ nav.scrolled{background:rgba(8,8,8,.92);backdrop-filter:blur(24px);border-bottom
 .card-foot{display:flex;align-items:center;justify-content:space-between}
 .price{font-size:1.9rem;font-weight:700;letter-spacing:-.03em}
 .price small{font-size:.9rem;color:var(--g500);font-weight:400}
+.was{font-size:1rem;color:var(--g400);text-decoration:line-through;font-weight:400;margin-right:.4rem}
+.sale-tag{background:#e03030!important;color:#fff!important;border-color:#e03030!important}
+.sale-badge{display:inline-block;background:#e03030;color:#fff;border-radius:100px;padding:.15rem .6rem;font-size:.65rem;font-weight:700;letter-spacing:.07em;vertical-align:middle;margin-left:.5rem}
 .atc{display:flex;align-items:center;gap:.4rem;background:var(--white);color:var(--black);border:none;padding:.8rem 1.6rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
 .atc:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,.18)}
 .atc:active{transform:scale(.97)}
+.card{cursor:pointer}
+
+/* PRODUCT DETAIL */
+.pdp-bg{position:fixed;inset:0;z-index:8000;opacity:0;pointer-events:none;transition:opacity .4s}
+.pdp-bg.open{opacity:1;pointer-events:all}
+.pdp-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(28px)}
+.pdp{position:absolute;inset:0;display:grid;grid-template-columns:55% 45%;transform:translateX(40px);transition:transform .5s var(--trans);opacity:0;transition:transform .5s var(--trans),opacity .4s}
+.pdp-bg.open .pdp{transform:translateX(0);opacity:1}
+.pdp-img-col{position:relative;overflow:hidden}
+.pdp-img-col img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);transition:transform .9s var(--trans)}
+.pdp-bg.open .pdp-img-col img{transform:scale(1)}
+.pdp-img-gradient{position:absolute;inset:0;background:linear-gradient(to right,rgba(8,8,8,0) 40%,rgba(8,8,8,.98) 85%,#080808 100%),linear-gradient(to bottom,rgba(8,8,8,.5) 0%,transparent 20%,transparent 75%,rgba(8,8,8,.7) 100%);pointer-events:none}
+.pdp-img-tag{position:absolute;top:2rem;left:2rem}
+.pdp-body{padding:0 4rem 0 3rem;display:flex;flex-direction:column;justify-content:center;overflow-y:auto;background:linear-gradient(to right,rgba(8,8,8,.98),#080808)}
+.pdp-close{position:fixed;top:2rem;right:2rem;background:rgba(30,30,30,.9);border:1px solid rgba(255,255,255,.1);color:var(--white);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .25s;z-index:10;backdrop-filter:blur(12px)}
+.pdp-close:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);transform:rotate(90deg)}
+.pdp-meta{display:flex;align-items:center;gap:.75rem;margin-bottom:1.4rem}
+.pdp-num{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--g400);letter-spacing:.18em}
+.pdp-sep{width:20px;height:1px;background:var(--g300)}
+.pdp-stock{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#4ade80;display:flex;align-items:center;gap:.4rem}
+.pdp-stock-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+.pdp-name{font-size:clamp(2rem,3.5vw,3rem);font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:1.4rem}
+.pdp-rule{height:1px;background:linear-gradient(to right,var(--g200),transparent);margin-bottom:1.6rem}
+.pdp-desc{color:var(--g500);font-size:.9rem;line-height:1.8;margin-bottom:2rem}
+.pdp-features{display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.5rem}
+.pdp-feat{display:flex;align-items:center;gap:.9rem;font-size:.82rem;color:var(--g400);letter-spacing:.02em}
+.pdp-feat-dash{width:14px;height:1px;background:var(--g300);flex-shrink:0}
+.pdp-price-block{margin-bottom:2rem}
+.pdp-was{font-size:.85rem;color:var(--g400);text-decoration:line-through;letter-spacing:.04em;margin-bottom:.3rem}
+.pdp-price-row{display:flex;align-items:center;gap:1rem}
+.pdp-price-new{font-size:3rem;font-weight:700;letter-spacing:-.06em;line-height:1}
+.pdp-save-pill{background:#e03030;color:#fff;border-radius:8px;padding:.28rem .7rem;font-size:.68rem;font-weight:700;letter-spacing:.06em}
+.pdp-actions{display:flex;flex-direction:column;gap:1rem}
+.pdp-qty-row{display:flex;align-items:center;gap:1.2rem}
+.pdp-qty-label{font-size:.72rem;color:var(--g400);letter-spacing:.1em;text-transform:uppercase;min-width:2.5rem}
+.pdp-qty-ctrl{display:flex;align-items:center;gap:.5rem;background:var(--g200);border:1px solid var(--g300);border-radius:100px;padding:.3rem .45rem}
+.pdp-qty-btn{background:var(--g300);border:none;color:var(--white);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s;line-height:1}
+.pdp-qty-btn:hover{background:var(--g400)}
+.pdp-qty-val{font-size:.9rem;font-weight:600;min-width:26px;text-align:center}
+.pdp-atc{display:flex;align-items:center;justify-content:center;gap:.55rem;background:var(--white);color:var(--black);border:none;padding:1.05rem 2rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;width:100%;letter-spacing:-.01em}
+.pdp-atc:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(255,255,255,.18)}
+.pdp-atc:active{transform:scale(.97)}
+.pdp-esc-hint{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.62rem;color:var(--g400);letter-spacing:.16em;opacity:0;transition:opacity .5s .3s;pointer-events:none}
+.pdp-bg.open .pdp-esc-hint{opacity:1}
+@media(max-width:800px){
+  .pdp{grid-template-columns:1fr;grid-template-rows:45% 1fr}
+  .pdp-img-gradient{background:linear-gradient(to bottom,transparent 50%,rgba(8,8,8,.98) 90%,#080808)}
+  .pdp-body{padding:1.8rem 1.8rem 3rem;background:transparent;justify-content:flex-end}
+  .pdp-name{font-size:1.8rem}
+  .pdp-price-new{font-size:2.2rem}
+  .pdp-close{top:1.2rem;right:1.2rem}
+}
 
 /* DIVIDER */
 .divider{position:relative;z-index:1;height:1px;background:linear-gradient(to right,transparent,var(--g300),transparent);margin:0 2.5rem}
@@ -259,13 +314,13 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
   <div class="grid">
 
     <!-- Glossy Plate -->
-    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)">
+    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)" onclick="openPdp('plate')"  >
       <div class="img-wrap">
         <img src="./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg" id="plateImg" alt="Glossy Custom Plate">
-        <span class="tag">IN STOCK</span>
+        <span class="tag sale-tag">SALE</span>
         <div class="dots" id="plateDots">
-          <div class="dot on" onclick="swapImg(0,'plateImg','./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg','plateDots')"></div>
-          <div class="dot" onclick="swapImg(1,'plateImg','./0E64AF0E-FA25-42C7-B50C-88569D1DE576.jpeg','plateDots')"></div>
+          <div class="dot on" onclick="event.stopPropagation();swapImg(0,'plateImg','./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg','plateDots')"></div>
+          <div class="dot" onclick="event.stopPropagation();swapImg(1,'plateImg','./0E64AF0E-FA25-42C7-B50C-88569D1DE576.jpeg','plateDots')"></div>
         </div>
       </div>
       <div class="card-body">
@@ -279,8 +334,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
           <span class="chip">Lightweight ABS</span>
         </div>
         <div class="card-foot">
-          <div class="price">$45<small>.00</small></div>
-          <button class="atc" onclick="addToCart('plate')">
+          <div class="price"><span class="was">$45</span>$20<small>.00</small><span class="sale-badge">56% OFF</span></div>
+          <button class="atc" onclick="event.stopPropagation();addToCart('plate')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add to Cart
           </button>
@@ -289,10 +344,11 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
     </div>
 
     <!-- Baja Light + Horn Kit -->
-    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)">
+    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)" onclick="openPdp('kit')"  >
       <div class="img-wrap">
         <img src="./0.jpg" alt="Baja Light + Horn Kit">
         <span class="tag" style="background:var(--white);color:var(--black);border-color:var(--white)">BEST SELLER</span>
+        <span class="tag sale-tag" style="position:absolute;top:1.2rem;left:auto;right:1.2rem">SALE</span>
       </div>
       <div class="card-body">
         <div class="card-num">02 / 02</div>
@@ -306,8 +362,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
           <span class="chip">Battery Included</span>
         </div>
         <div class="card-foot">
-          <div class="price">$50<small>.00</small></div>
-          <button class="atc" onclick="addToCart('kit')">
+          <div class="price"><span class="was">$70</span>$50<small>.00</small><span class="sale-badge">29% OFF</span></div>
+          <button class="atc" onclick="event.stopPropagation();addToCart('kit')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add to Cart
           </button>
@@ -330,7 +386,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
     <div class="stats">
       <div class="stat reveal"><div class="stat-n">100%</div><div class="stat-l">Custom Made</div></div>
       <div class="stat reveal"><div class="stat-n">2</div><div class="stat-l">Premium Products</div></div>
-      <div class="stat reveal"><div class="stat-n">$45</div><div class="stat-l">Starting Price</div></div>
+      <div class="stat reveal"><div class="stat-n">$20</div><div class="stat-l">Starting Price</div></div>
       <div class="stat reveal"><div class="stat-n">∞</div><div class="stat-l">Style Points</div></div>
     </div>
   </div>
@@ -367,6 +423,52 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
     <span>Made with precision.</span>
   </div>
 </footer>
+
+<!-- PRODUCT DETAIL OVERLAY -->
+<div class="pdp-bg" id="pdpBg">
+  <div class="pdp-backdrop" onclick="closePdp()"></div>
+  <div class="pdp" id="pdp">
+    <div class="pdp-img-col">
+      <img id="pdpImg" src="" alt="">
+      <div class="pdp-img-gradient"></div>
+      <div class="pdp-img-tag"><span class="tag sale-tag">SALE</span></div>
+    </div>
+    <div class="pdp-body">
+      <div class="pdp-meta">
+        <span class="pdp-num" id="pdpNum"></span>
+        <span class="pdp-sep"></span>
+        <span class="pdp-stock"><span class="pdp-stock-dot"></span>In Stock</span>
+      </div>
+      <h2 class="pdp-name" id="pdpName"></h2>
+      <div class="pdp-rule"></div>
+      <p class="pdp-desc" id="pdpDesc"></p>
+      <div class="pdp-features" id="pdpFeatures"></div>
+      <div class="pdp-price-block">
+        <div class="pdp-was" id="pdpWas"></div>
+        <div class="pdp-price-row">
+          <span class="pdp-price-new" id="pdpPriceNew"></span>
+          <span class="pdp-save-pill" id="pdpSave"></span>
+        </div>
+      </div>
+      <div class="pdp-actions">
+        <div class="pdp-qty-row">
+          <span class="pdp-qty-label">Qty</span>
+          <div class="pdp-qty-ctrl">
+            <button class="pdp-qty-btn" onclick="pdpQty(-1)">−</button>
+            <span class="pdp-qty-val" id="pdpQtyVal">1</span>
+            <button class="pdp-qty-btn" onclick="pdpQty(1)">+</button>
+          </div>
+        </div>
+        <button class="pdp-atc" id="pdpAtc">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+  <button class="pdp-close" onclick="closePdp()">✕</button>
+  <span class="pdp-esc-hint">ESC TO CLOSE</span>
+</div>
 
 <!-- CART PANEL -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
@@ -532,7 +634,7 @@ function swapImg(idx, imgId, src, dotsId){
 
 /* ── CART STATE ── */
 const PRODUCTS = {
-  plate:{ id:'plate', name:'Glossy Custom Plate',   price:45, img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg' },
+  plate:{ id:'plate', name:'Glossy Custom Plate',   price:20, img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg' },
   kit:  { id:'kit',  name:'Baja Light + Horn Kit',  price:50, img:'./0.jpg' }
 };
 let cart = {};
@@ -671,6 +773,56 @@ function clearCart(){
   cart={};
   renderCart();
 }
+
+/* ── PRODUCT DETAIL ── */
+const PRODUCT_DETAILS = {
+  plate:{
+    num:'01 / 02', name:'Glossy Custom Plate',
+    desc:'Precision-molded high-gloss front plate for electric dirt bikes. Mirror-finish black coat with custom fitment that commands attention on and off the trail.',
+    features:['High-Gloss Mirror Finish','Precision Custom Fit','UV & Weather Resistant','Lightweight ABS Construction'],
+    price:20, was:45, save:'56% OFF',
+    img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg'
+  },
+  kit:{
+    num:'02 / 02', name:'Baja Light + Horn Kit',
+    desc:'Complete plug-and-play kit with dual-LED Baja light, electric horn, battery pack, and handlebar-mounted dual switch. Two switch styles available.',
+    features:['Dual High-Beam LED Lights','Electric Horn Included','Plug & Play Installation','2 Switch Style Options','Battery Pack Included'],
+    price:50, was:70, save:'29% OFF',
+    img:'./0.jpg'
+  }
+};
+let pdpQtyCount = 1;
+
+function openPdp(id){
+  const p = PRODUCT_DETAILS[id];
+  pdpQtyCount = 1;
+  document.getElementById('pdpQtyVal').textContent = 1;
+  document.getElementById('pdpImg').src = p.img;
+  document.getElementById('pdpImg').alt = p.name;
+  document.getElementById('pdpNum').textContent = p.num;
+  document.getElementById('pdpName').textContent = p.name;
+  document.getElementById('pdpDesc').textContent = p.desc;
+  document.getElementById('pdpFeatures').innerHTML = p.features.map(f=>`<div class="pdp-feat"><span class="pdp-feat-dash"></span>${f}</div>`).join('');
+  document.getElementById('pdpWas').textContent = 'Was $'+p.was+'.00';
+  document.getElementById('pdpPriceNew').textContent = '$'+p.price;
+  document.getElementById('pdpSave').textContent = p.save;
+  document.getElementById('pdpAtc').onclick = e=>{
+    e.stopPropagation();
+    for(let i=0;i<pdpQtyCount;i++) addToCart(id);
+    closePdp();
+  };
+  document.getElementById('pdpBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function pdpQty(d){
+  pdpQtyCount = Math.max(1, pdpQtyCount + d);
+  document.getElementById('pdpQtyVal').textContent = pdpQtyCount;
+}
+function closePdp(){
+  document.getElementById('pdpBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePdp(); });
 
 /* ── INIT ── */
 renderCart();

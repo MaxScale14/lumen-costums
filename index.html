@@ -141,6 +141,9 @@ nav.scrolled{background:rgba(8,8,8,.92);backdrop-filter:blur(24px);border-bottom
 .pdp-atc{display:flex;align-items:center;justify-content:center;gap:.55rem;background:var(--white);color:var(--black);border:none;padding:1.05rem 2rem;border-radius:100px;font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;width:100%;letter-spacing:-.01em}
 .pdp-atc:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(255,255,255,.18)}
 .pdp-atc:active{transform:scale(.97)}
+.pdp-dots{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem;z-index:3}
+.pdp-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;border:none;padding:0}
+.pdp-dot.on{background:var(--white);width:20px;border-radius:4px}
 .pdp-esc-hint{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.62rem;color:var(--g400);letter-spacing:.16em;opacity:0;transition:opacity .5s .3s;pointer-events:none}
 .pdp-bg.open .pdp-esc-hint{opacity:1}
 @media(max-width:800px){
@@ -463,6 +466,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
       <img id="pdpImg" src="" alt="">
       <div class="pdp-img-gradient"></div>
       <div class="pdp-img-tag"><span class="tag sale-tag">SALE</span></div>
+      <div class="pdp-dots" id="pdpDots"></div>
     </div>
     <div class="pdp-body">
       <div class="pdp-meta">
@@ -827,10 +831,20 @@ const PRODUCT_DETAILS = {
     desc:'Complete 41-piece titanium bolt set engineered for electric dirt bikes. Rainbow-anodized finish covers brake levers, mud guard, bash guard, controller, handle bars, key ignition cover, seat lock, fork clamp, and more.',
     features:['41 Pieces Total','Titanium Grade Hardware','Rainbow Anodized Finish','10 Bike Locations Covered','Includes Flange & Cap Bolts'],
     price:90, was:null, save:null,
-    img:'./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg'
+    img:'./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg',
+    images:['./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg','./2987A496-C9A5-43DC-850E-08EB278843D6.jpeg']
   }
 };
 let pdpQtyCount = 1;
+
+function pdpSwapImg(idx, images){
+  const img  = document.getElementById('pdpImg');
+  const dots = document.getElementById('pdpDots');
+  img.style.transition = 'opacity .2s';
+  img.style.opacity = '0';
+  setTimeout(()=>{ img.src = images[idx]; img.style.opacity = '1'; }, 200);
+  [...dots.children].forEach((d,i) => d.classList.toggle('on', i === idx));
+}
 
 function openPdp(id){
   const p = PRODUCT_DETAILS[id];
@@ -839,6 +853,17 @@ function openPdp(id){
   document.getElementById('pdpImg').src = p.img;
   document.getElementById('pdpImg').alt = p.name;
   document.querySelector('.pdp-img-tag').style.display = p.was ? '' : 'none';
+
+  const dotsEl = document.getElementById('pdpDots');
+  if(p.images && p.images.length > 1){
+    dotsEl.innerHTML = p.images.map((src, i) =>
+      `<button class="pdp-dot${i===0?' on':''}" onclick="pdpSwapImg(${i},${JSON.stringify(p.images)})"></button>`
+    ).join('');
+    dotsEl.style.display = 'flex';
+  } else {
+    dotsEl.innerHTML = '';
+    dotsEl.style.display = 'none';
+  }
   document.getElementById('pdpNum').textContent = p.num;
   document.getElementById('pdpName').textContent = p.name;
   document.getElementById('pdpDesc').textContent = p.desc;

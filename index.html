@@ -308,7 +308,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
       <div class="section-label">// Our Products</div>
       <h2 class="ph-title">BUILT FOR <span>YOUR</span> RIDE</h2>
     </div>
-    <span class="ph-count">02 Products</span>
+    <span class="ph-count">03 Products</span>
   </div>
 
   <div class="grid">
@@ -324,7 +324,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
         </div>
       </div>
       <div class="card-body">
-        <div class="card-num">01 / 02</div>
+        <div class="card-num">01 / 03</div>
         <h3 class="card-name">Glossy Custom Plate</h3>
         <p class="card-desc">Precision-molded high-gloss front plate for electric dirt bikes. Mirror-finish black coat with custom fitment that commands attention on and off the trail.</p>
         <div class="chips">
@@ -351,7 +351,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
         <span class="tag sale-tag" style="position:absolute;top:1.2rem;left:auto;right:1.2rem">SALE</span>
       </div>
       <div class="card-body">
-        <div class="card-num">02 / 02</div>
+        <div class="card-num">02 / 03</div>
         <h3 class="card-name">Baja Light + Horn Kit</h3>
         <p class="card-desc">Complete plug-and-play kit with dual-LED Baja light, electric horn, battery pack, and handlebar-mounted dual switch. Two switch styles available.</p>
         <div class="chips">
@@ -364,6 +364,36 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
         <div class="card-foot">
           <div class="price"><span class="was">$70</span>$50<small>.00</small><span class="sale-badge">29% OFF</span></div>
           <button class="atc" onclick="event.stopPropagation();addToCart('kit')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Titanium Bolt Kit -->
+    <div class="card reveal" onmousemove="tilt(event,this)" onmouseleave="untilt(this)" onclick="openPdp('titanium')"  >
+      <div class="img-wrap">
+        <img src="./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg" id="titaniumImg" alt="Titanium Bolt Kit">
+        <span class="tag" style="background:var(--white);color:var(--black);border-color:var(--white)">NEW</span>
+        <div class="dots" id="titaniumDots">
+          <div class="dot on" onclick="event.stopPropagation();swapImg(0,'titaniumImg','./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg','titaniumDots')"></div>
+          <div class="dot" onclick="event.stopPropagation();swapImg(1,'titaniumImg','./2987A496-C9A5-43DC-850E-08EB278843D6.jpeg','titaniumDots')"></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-num">03 / 03</div>
+        <h3 class="card-name">Titanium Bolt Kit</h3>
+        <p class="card-desc">Complete 41-piece titanium bolt set engineered for electric dirt bikes. Rainbow-anodized finish covers brake levers, mud guard, bash guard, controller, handle bars, and more.</p>
+        <div class="chips">
+          <span class="chip">41 Pieces</span>
+          <span class="chip">Titanium Grade</span>
+          <span class="chip">Rainbow Anodized</span>
+          <span class="chip">Full Bike Coverage</span>
+        </div>
+        <div class="card-foot">
+          <div class="price">$90<small>.00</small></div>
+          <button class="atc" onclick="event.stopPropagation();addToCart('titanium')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Add to Cart
           </button>
@@ -385,7 +415,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
     <p class="about-text">From high-gloss custom body panels to complete lighting and horn kits — we create purpose-built upgrades that make your ride uniquely yours.</p>
     <div class="stats">
       <div class="stat reveal"><div class="stat-n">100%</div><div class="stat-l">Custom Made</div></div>
-      <div class="stat reveal"><div class="stat-n">2</div><div class="stat-l">Premium Products</div></div>
+      <div class="stat reveal"><div class="stat-n">3</div><div class="stat-l">Premium Products</div></div>
       <div class="stat reveal"><div class="stat-n">$20</div><div class="stat-l">Starting Price</div></div>
       <div class="stat reveal"><div class="stat-n">∞</div><div class="stat-l">Style Points</div></div>
     </div>
@@ -407,6 +437,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--g200);padding:4rem
       <ul>
         <li><a href="#products">Glossy Custom Plate</a></li>
         <li><a href="#products">Baja Light + Horn Kit</a></li>
+        <li><a href="#products">Titanium Bolt Kit</a></li>
       </ul>
     </div>
     <div class="foot-col">
@@ -634,8 +665,9 @@ function swapImg(idx, imgId, src, dotsId){
 
 /* ── CART STATE ── */
 const PRODUCTS = {
-  plate:{ id:'plate', name:'Glossy Custom Plate',   price:20, img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg' },
-  kit:  { id:'kit',  name:'Baja Light + Horn Kit',  price:50, img:'./0.jpg' }
+  plate:   { id:'plate',    name:'Glossy Custom Plate',  price:20, img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg' },
+  kit:     { id:'kit',     name:'Baja Light + Horn Kit', price:50, img:'./0.jpg' },
+  titanium:{ id:'titanium', name:'Titanium Bolt Kit',    price:90, img:'./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg' }
 };
 let cart = {};
 
@@ -777,18 +809,25 @@ function clearCart(){
 /* ── PRODUCT DETAIL ── */
 const PRODUCT_DETAILS = {
   plate:{
-    num:'01 / 02', name:'Glossy Custom Plate',
+    num:'01 / 03', name:'Glossy Custom Plate',
     desc:'Precision-molded high-gloss front plate for electric dirt bikes. Mirror-finish black coat with custom fitment that commands attention on and off the trail.',
     features:['High-Gloss Mirror Finish','Precision Custom Fit','UV & Weather Resistant','Lightweight ABS Construction'],
     price:20, was:45, save:'56% OFF',
     img:'./F3E44CD0-5649-4A2A-8F4B-1D224A784CCA.jpeg'
   },
   kit:{
-    num:'02 / 02', name:'Baja Light + Horn Kit',
+    num:'02 / 03', name:'Baja Light + Horn Kit',
     desc:'Complete plug-and-play kit with dual-LED Baja light, electric horn, battery pack, and handlebar-mounted dual switch. Two switch styles available.',
     features:['Dual High-Beam LED Lights','Electric Horn Included','Plug & Play Installation','2 Switch Style Options','Battery Pack Included'],
     price:50, was:70, save:'29% OFF',
     img:'./0.jpg'
+  },
+  titanium:{
+    num:'03 / 03', name:'Titanium Bolt Kit',
+    desc:'Complete 41-piece titanium bolt set engineered for electric dirt bikes. Rainbow-anodized finish covers brake levers, mud guard, bash guard, controller, handle bars, key ignition cover, seat lock, fork clamp, and more.',
+    features:['41 Pieces Total','Titanium Grade Hardware','Rainbow Anodized Finish','10 Bike Locations Covered','Includes Flange & Cap Bolts'],
+    price:90, was:null, save:null,
+    img:'./BBF533D3-F8A8-4490-B598-B766A35215E0.jpeg'
   }
 };
 let pdpQtyCount = 1;
@@ -799,13 +838,15 @@ function openPdp(id){
   document.getElementById('pdpQtyVal').textContent = 1;
   document.getElementById('pdpImg').src = p.img;
   document.getElementById('pdpImg').alt = p.name;
+  document.querySelector('.pdp-img-tag').style.display = p.was ? '' : 'none';
   document.getElementById('pdpNum').textContent = p.num;
   document.getElementById('pdpName').textContent = p.name;
   document.getElementById('pdpDesc').textContent = p.desc;
   document.getElementById('pdpFeatures').innerHTML = p.features.map(f=>`<div class="pdp-feat"><span class="pdp-feat-dash"></span>${f}</div>`).join('');
-  document.getElementById('pdpWas').textContent = 'Was $'+p.was+'.00';
+  document.getElementById('pdpWas').textContent = p.was ? 'Was $'+p.was+'.00' : '';
   document.getElementById('pdpPriceNew').textContent = '$'+p.price;
-  document.getElementById('pdpSave').textContent = p.save;
+  document.getElementById('pdpSave').textContent = p.save || '';
+  document.getElementById('pdpSave').style.display = p.save ? '' : 'none';
   document.getElementById('pdpAtc').onclick = e=>{
     e.stopPropagation();
     for(let i=0;i<pdpQtyCount;i++) addToCart(id);
